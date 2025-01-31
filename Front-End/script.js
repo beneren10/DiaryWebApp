@@ -30,6 +30,8 @@ function entry(e){
         const h5 = document.createElement('h5')
         h5.className = 'card-title'
         h5.innerText = formObject.title
+        const date = document.createElement('p')
+        date.innerText = formObject.date
         const text = document.createElement('p')
         text.className = 'card-text'
         text.innerText = formObject.entry
@@ -46,7 +48,7 @@ function entry(e){
 
         console.log('hit')
         buttons.append(edit,deleteBtn)
-        cardBody.append(h5,text,buttons)
+        cardBody.append(h5,date,text,buttons)
         newCard.append(cardBody)
         diaryOutputs.append(newCard)
     }    

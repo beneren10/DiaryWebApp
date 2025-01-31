@@ -8,53 +8,58 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container-fluid bg-light vh-100 d-flex flex-column">
+    <div class="container-inline bg-light vh-100 d-flex flex-column">
 
         <header class="text-center py-4">
           <h1>Welcome to Diary a Day</h1>
           <p class="lead">Make diary entries and keep track of your great days, and reflect on your not so good days</p>
-          <nav class="navbar navbar-light bg-muted justify-content-between">
+          <nav class="navbar navbar-light bg-white justify-content-between border p-1">
             <a class="navbar-brand">Search for Diary Entries</a>
             <!-- Search Form -->
-            <form id='search-form' class="form-inline d-flex align-items-center">
-              <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-primary my-2 my-sm-" type="submit">Search</button>
+            <form id='search-form' class="form-inline d-flex align-items-center gap-1">
+              <input class="form-control" type="text" for='search-form' placeholder="Search" aria-label="Search">
+              <button class="btn btn-primary my-4 my-sm-0" type="submit">Search</button>
             </form>
           </nav>
         </header>
 
         <!-- main content -->
-        <div id='main-content' class="container-fluid d-flex flex-grow-1 align-items-start">
+        <div for='main-content' class="container-fluid d-flex flex-grow-1 align-items-start">
             <div class="row g-6">
               <!-- Form -->
-              <div class="col-md-6">
-                <form class="needs-validation border p-3 bg-white h-100" novalidate>
+              <div class="col-md-3">
+                <form id='diaryEntry' class="needs-validation border p-3 bg-white h-100" novalidate>
                   <!-- Name -->
                   <div class="mb-3">
                     <label for="validationCustom01" class="form-label">Enter Your Name:</label>
-                    <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
+                    <input type="text" for="diaryEntry" class="form-control" name="name" id="validationCustom01" value="mark" placeholder="Mark">
                     <div class="valid-feedback">Looks good!</div>
+                  </div>
+                  <!-- title  -->
+                  <div class="mb-3">
+                    <label for="validationCustom05" class="form-label">Title:</label>
+                    <input type="text" value="test" class="form-control" id="validationCustom05" name="title">
                   </div>
                   <!-- Date-->
                   <div class="mb-3">
                     <label for="validationCustom02" class="form-label">Date:</label>
-                    <input type="date" class="form-control" id="validationCustom02" required>
+                    <input type="date" class="form-control" id="validationCustom02" name="date">
                     <div class="valid-feedback">Looks good!</div>
                   </div>
                   <!-- Category -->
                   <div class="mb-3">
                     <label for="validationCustom04" class="form-label">Category:</label>
-                    <select class="form-select" id="validationCustom04" required>
+                    <select class="form-select" style="top: 100%; left: 0;" id="validationCustom04" name="category">
                       <option selected disabled value="">Choose...</option>
                       <option>General</option>
                       <option>Relationships</option>
                       <option>Work</option>
                     </select>
                   </div>
-                  <!-- Zip -->
+                  <!-- Entry -->
                   <div class="mb-3">
                     <label for="validationCustom05" class="form-label">Diary Entry:</label>
-                    <textarea type="text" class="form-control form-control-sm" id="validationCustom05" required></textarea>
+                    <textarea type="text" class="form-control form-control-sm" id="validationCustom05" name="entry"></textarea>
                   </div>
                   <div class="d-grid">
                     <button class="btn btn-primary" type="submit">Submit form</button>
@@ -63,14 +68,14 @@
               </div>
           
               <!-- Card -->
-              <div class="col-md-6">
-                <div class="card">
+              <div id='diaryOutputs' class="col-md-9">
+                <div id='default' class="card">
                   <div class="card-body">
                     <h5 class="card-title">Another Wednesday!</h5>
                     <p class="card-text">Work was productive today—I finally wrapped up that lingering project. The team seemed upbeat, and even the afternoon meeting was quick. Afterward, I had dinner with Alex at our favorite Italian spot. It was great catching up over amazing pasta and tiramisu. A perfect mix of a productive day and quality time with a friend.</p>
                     <div class="d-flex justify-content-start gap-1">
-                      <a onclick="edit()"  class="btn btn-primary">Edit</a>
-                      <a onclick="destroy()" class="btn btn-secondary">Delete</a>
+                      <a id='edit' class="btn btn-primary">Edit</a>
+                      <a id='delete'class="btn btn-secondary">Delete</a>
                     </div>
                   </div>
                 </div>
@@ -78,10 +83,6 @@
 
             </div>
           </div>
-          
-        <footer class="text-center mt-4">
-          <p>&copy; 2025 My Bootstrap Page</p>
-        </footer>
       </div>    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="script.js"defer></script>

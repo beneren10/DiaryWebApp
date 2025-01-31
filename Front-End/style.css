@@ -1,0 +1,6 @@
+.form-select {
+    position: relative; /* Ensure positioning context */
+  }
+.form-select:focus {
+    z-index: 1050; /* Bring the dropdown to the front when focused */
+  }

@@ -8,25 +8,76 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
+
         <header class="text-center py-4">
-          <h1>My Bootstrap Page</h1>
-          <p class="lead">A simple and responsive layout.</p>
+          <h1>Welcome to Diary a Day</h1>
+          <p class="lead">Make diary entries and keep track of your great days, and reflect on your not so good days</p>
+          <nav class="navbar navbar-light bg-muted justify-content-evenly">
+            <a class="navbar-brand">Search for Diary Entries</a>
+            <!-- Search Form -->
+            <form id='search-form' class="form-inline d-flex align-items-center">
+              <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </nav>
         </header>
-        
-        <main>
-          <div class="row">
-            <div class="col-md-6">
-              <h2>Left Column</h2>
-              <p>Bootstrap's grid system makes layouts easy.</p>
-            </div>
-            <div class="col-md-6">
-              <h2>Right Column</h2>
-              <p>Responsive designs that adapt to screen sizes.</p>
+
+        <div class="container-fluid d-flex align-items-center">
+            <div class="row g-3">
+              <!-- Form -->
+              <div class="col-md-6">
+                <form class="needs-validation border p-3" novalidate>
+                  <!-- Name -->
+                  <div class="mb-3">
+                    <label for="validationCustom01" class="form-label">Enter Your Name:</label>
+                    <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
+                    <div class="valid-feedback">Looks good!</div>
+                  </div>
+                  <!-- Date-->
+                  <div class="mb-3">
+                    <label for="validationCustom02" class="form-label">Date:</label>
+                    <input type="date" class="form-control" id="validationCustom02" required>
+                    <div class="valid-feedback">Looks good!</div>
+                  </div>
+                  <!-- Category -->
+                  <div class="mb-3">
+                    <label for="validationCustom04" class="form-label">Category:</label>
+                    <select class="form-select" id="validationCustom04" required>
+                      <option selected disabled value="">Choose...</option>
+                      <option>General</option>
+                      <option>Relationships</option>
+                      <option>Work</option>
+                    </select>
+                  </div>
+                  <!-- Zip -->
+                  <div class="mb-3">
+                    <label for="validationCustom05" class="form-label">Diary Entry:</label>
+                    <textarea type="text" class="form-control form-control-sm" id="validationCustom05" required></textarea>
+                  </div>
+                  <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">Submit form</button>
+                  </div>
+                </form>
+              </div>
+          
+              <!-- Card -->
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Another Wednesday!</h5>
+                    <p class="card-text">Work was productive today—I finally wrapped up that lingering project. The team seemed upbeat, and even the afternoon meeting was quick. Afterward, I had dinner with Alex at our favorite Italian spot. It was great catching up over amazing pasta and tiramisu. A perfect mix of a productive day and quality time with a friend.</p>
+                    <div class="d-flex gap-1">
+                      <a href="#" class="btn btn-primary">Edit</a>
+                      <a href="#" class="btn btn-secondary">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
-        </main>
-        
+          
         <footer class="text-center mt-4">
           <p>&copy; 2025 My Bootstrap Page</p>
         </footer>

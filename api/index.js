@@ -1,7 +1,7 @@
 require ("dotenv").config()
 
 const api = require("./app")
-const port = 3000
+const port = process.env.PORT
 
 
 api.listen(port,() => {

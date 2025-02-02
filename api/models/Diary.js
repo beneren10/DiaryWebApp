@@ -11,7 +11,6 @@ class Diary {
   }
 
   static async getAll() {
-    console.log("Hello")
     const response = await db.query("SELECT * FROM diary ORDER BY id DESC;");
 
     if (response.rows.length === 0) {
@@ -42,8 +41,8 @@ class Diary {
 
 
   static async create(data) {
-    const { category, title, text } = data;
-    const response = await db.query("INSERT INTO diary (category, text, title, date, time) VALUES ($1, $2, $3, DEFAULT, DEFAULT) RETURNING *;",[category, text, title]
+    const { category, title, text, date} = data;
+    const response = await db.query('INSERT INTO diary (category, text, title, date) VALUES ($1, $2, $3, DEFAULT) RETURNING *;',[category, text, title]
     );
 
     return new Diary(response.rows[0]);

@@ -30,8 +30,9 @@ async function show(req, res) {
     }
   }
 
-const create = async (req, res) => {
+async function create(req, res){
     try {
+        console.log(req.body)
         const newDiary = await Diary.create(req.body);
         res.status(201).send(newDiary);
     } catch (err) {

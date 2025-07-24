@@ -1,7 +1,7 @@
 const Diary = require("../models/Diary");
 
 const index = async (req, res) => {
-    console.log("Hello")
+    console.log("index controller")
     try {
         const diary = await Diary.getAll();
         res.status(200).send(diary);
@@ -11,6 +11,8 @@ const index = async (req, res) => {
 }
 
 async function show(req, res) {
+    console.log('showing controller');
+    console.log(req.params.id);
     try {
       const id = parseInt(req.params.id);
       const diary = await Diary.getOneById(id);
@@ -42,22 +44,26 @@ async function create(req, res){
 
 async function update(req, res) {
     try {
+      console.log('update hit');
       const id = parseInt(req.params.id);
       const data = req.body;
+      console.log(data);
       const diary = await Diary.getOneById(id);
+      console.log(diary);
       const result = await diary.update(data)
+      
       res.status(200).json(result);
     } catch (err) {
       res.status(404).json({ error: err.message })
     }
   }
 
-const destroy = async (req, res) => {
-    const name = req.params.name.toLowerCase();
+async function destroy(req, res) {
+    const idParam = req.params.id
 
     try {
-      const diary = await Diary.show(name);
-      const result = await diary.destroy();
+      const diary = await Diary.getOneById(idParam);
+      await diary.destroy();
 
       res.sendStatus(204)
     } catch (err) {

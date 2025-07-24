@@ -11,6 +11,7 @@ class Diary {
   }
 
   static async getAll() {
+    console.log('diary model');
     const response = await db.query("SELECT * FROM diary ORDER BY id DESC;");
 
     if (response.rows.length === 0) {
@@ -39,7 +40,6 @@ class Diary {
     return response.rows.map((entry) => new Diary(entry));
   }
 
-
   static async create(data) {
     const { category, title, text, date} = data;
     const response = await db.query('INSERT INTO diary (category, text, title, date) VALUES ($1, $2, $3, DEFAULT) RETURNING *;',[category, text, title]
@@ -48,13 +48,12 @@ class Diary {
     return new Diary(response.rows[0]);
   }
 
- 
   async update(data) {
-    const { category, text, title } = data;
+    const { text, title } = data;
     const existingEntry = await db.query("SELECT id FROM diary WHERE id = $1;", [this.id]);
-
+    console.log(existingEntry);
     if (existingEntry.rows.length > 0) {
-      const response = await db.query("UPDATE diary SET entry_date = CURRENT_DATE, entry_time = CURRENT_TIME, category = $1, text = $2, title = $3 WHERE id = $4 RETURNING *;",[category, text, title, this.id]
+      const response = await db.query("UPDATE diary SET date = CURRENT_DATE, category = $1, text = $2, title = $3 WHERE id = $4 RETURNING *;",[this.category, text, title, this.id]
       );
 
       return new Diary(response.rows[0]);
@@ -62,7 +61,6 @@ class Diary {
       throw new Error("Diary entry not found.");
     }
   }
-
 
   async destroy() {
     const response = await db.query("DELETE FROM diary WHERE id = $1 RETURNING *;", [this.id]);

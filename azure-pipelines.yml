@@ -1,17 +1,33 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
       - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps: 
-  - task: Docker@2
-    inputs:
-      containerRegistry: '<'
+variables:
+  imageName: 'myapp'
+  registry: 'myregistry.azurecr.io'
+  tag: '$(Build.BuildId)'
+
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: '<your-service-connection-name>'
+    repository: $(imageName)
+    command: buildAndPush
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(tag)
+
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: '<your-azure-subscription>'
+    azureResourceGroup: '<your-resource-group>'
+    kubernetesCluster: '<your-aks-cluster>'
+    namespace: 'default'
+    command: apply
+    useConfigurationFile: true
+    configuration: 'manifests/deployment.yml'

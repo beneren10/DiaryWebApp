@@ -34,7 +34,6 @@ async function show(req, res) {
 
 async function create(req, res){
     try {
-        console.log(req.body)
         const newDiary = await Diary.create(req.body);
         res.status(201).send(newDiary);
     } catch (err) {
@@ -44,10 +43,8 @@ async function create(req, res){
 
 async function update(req, res) {
     try {
-      console.log('update hit');
       const id = parseInt(req.params.id);
       const data = req.body;
-      console.log(data);
       const diary = await Diary.getOneById(id);
       console.log(diary);
       const result = await diary.update(data)

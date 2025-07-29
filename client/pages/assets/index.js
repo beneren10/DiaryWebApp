@@ -1,13 +1,22 @@
 const searchForm = document.querySelector('#search-form')
+
 const diaryEntry = document.querySelector('#diaryEntry')
 const diaryEdit = document.querySelector('#default #edit')
 const diaryDelete = document.querySelector('#default #delete')
 const diaryOutputs = document.querySelector('#diaryOutputs')
 const diaryDefault = document.querySelector('#default')
 const diaryCards = document.querySelector('.card')
+
 const getAll = document.querySelector('#getAll')
 
+document.querySelector('#logoutBtn').addEventListener('click', function (e) {
+    e.preventDefault()
+    window.location.href = 'login.html'
+})
+
 searchForm.addEventListener('submit',search)
+
+
 
 function search(e){
     e.preventDefault()
@@ -25,14 +34,14 @@ function newItem(e){
     e.preventDefault()
     const formData = new FormData(diaryEntry);
     const formObject = Object.fromEntries(formData.entries()); // Convert FormData to an object
-
+    console.log(formObject)
     if (formObject){
-        if (formObject.category && formObject.category){
+        if (formObject.category && formObject.text && formObject.title){
             addCard(formObject)
             postCard(formObject)
             diaryEntry.reset();
         } else {
-            alert('Please complete the form with category and diary entry')
+            alert('Please complete the form with category, title, date, diary entry, and rating.')
         }
        
     }    
@@ -40,7 +49,6 @@ function newItem(e){
 
 async function postCard(data) {
     try {
-        console.log(data.date)
         const response = await fetch(`http://localhost:3003/diary/`, {
             method: 'POST',
             headers: {
@@ -49,11 +57,11 @@ async function postCard(data) {
             body: JSON.stringify({
                 category: data.category,
                 text: data.text,
-                title: data.title
+                title: data.title,
+                rating: data.rating
             })
         })
         if (response.ok) {
-            console.log('hit')
             const postedCard = await response.json()
             console.log(postedCard)
         } else {
@@ -109,10 +117,6 @@ function deleteItem(e){
         const cardTitle = card.querySelector('.card-title')
         const cardDate = card.querySelector('.date')
 
-        console.log("Deleting card with title:", cardTitle.innerText);
-        console.log("Deleting card with title:", cardDate.innerText);
-        console.log(card.id);
-
         deleteDiaryEntry(card.id,e)
         card.remove(); // Remove the card from the DOM
     }
@@ -125,7 +129,6 @@ async function deleteDiaryEntry(id,e) {
         });
 
         if (response.ok){
-            console.log('delete entry with ID:', id);
             const card = e.target.closest('.card');
             card.remove();
         } else {
@@ -141,7 +144,6 @@ async function fetchDiary() {
         const response = await fetch(`http://localhost:3003/diary`)
         if (response.ok) {
             const data = await response.json()
-            console.log(data)
             entry(data)
         } else {
             throw "Error http status code " + response.status
@@ -159,44 +161,56 @@ function getAllEntries(e){
 }
 
 function entry(data){
-    console.log(data)
     data.forEach(element => {
         addCard(element)
-        console.log(element);
     });  
 }
-function addCard(element){
-    const newCard = document.createElement('div')
-        newCard.className = 'card mt-1'
-        newCard.id = element.id
-        const cardBody = document.createElement('div')
-        cardBody.className = 'card-body'
-        const h5 = document.createElement('h5')
-        h5.className = 'card-title'
-        h5.innerText = element.title
-        const date = document.createElement('p')
-        date.className = 'date'
-        date.innerText = element.date.split('T')[0]
-        const text = document.createElement('p')
-        text.className = 'card-text'
-        text.innerText = element.text
-        const buttons = document.createElement('div')
-        buttons.className = 'd-flex justify-content-start gap-1'
-        const edit = document.createElement('a')
-        edit.id = 'edit'
-        edit.className = 'btn btn-primary'
-        edit.innerText = 'Edit'
-        edit.addEventListener('click', editItem);
-        const deleteBtn = document.createElement('a')
-        deleteBtn.id = 'delete'
-        deleteBtn.className = 'btn btn-secondary'
-        deleteBtn.innerText = 'Delete'
-        deleteBtn.addEventListener('click', deleteItem);
 
-        buttons.append(edit,deleteBtn)
-        cardBody.append(h5,date,text,buttons)
-        newCard.append(cardBody)
-        diaryOutputs.append(newCard)
+function addCard(element){
+
+    if (document.getElementById(element.id)) {
+        return;
+    }
+
+    const newCard = document.createElement('div')
+    newCard.className = 'card mt-1'
+    newCard.id = element.id
+    const cardBody = document.createElement('div')
+    cardBody.className = 'card-body'
+    const titleRow = document.createElement('div')
+    titleRow.className = 'd-flex justify-content-between align-items-center mb-3'
+
+    const h5 = document.createElement('h5')
+    h5.className = 'card-title mb-0'
+    h5.innerText = element.title
+
+    const date = document.createElement('p')
+    date.className = 'date mb-0 text-muted'
+    date.innerText = element.category + ' : ' + ' Rating: ' + element.rating + ' : ' + element.date.split('T')[0]
+
+    const text = document.createElement('p')
+    text.className = 'card-text'
+    text.innerText = element.text
+    const buttons = document.createElement('div')
+    buttons.className = 'd-flex justify-content-start gap-1'
+    const edit = document.createElement('a')
+    edit.id = 'edit'
+    edit.className = 'btn btn-primary'
+    edit.innerText = 'Edit'
+    edit.addEventListener('click', editItem);
+    const deleteBtn = document.createElement('a')
+    deleteBtn.id = 'delete'
+    deleteBtn.className = 'btn btn-secondary'
+    deleteBtn.innerText = 'Delete'
+    deleteBtn.addEventListener('click', deleteItem);
+
+    titleRow.appendChild(h5)
+    titleRow.appendChild(date)
+
+    buttons.append(edit,deleteBtn)
+    cardBody.append(titleRow, text, buttons)
+    newCard.append(cardBody)
+    diaryOutputs.append(newCard)
 }
 
 document.getElementById('editForm').addEventListener('submit', async function(e) {
@@ -204,7 +218,7 @@ document.getElementById('editForm').addEventListener('submit', async function(e)
     const title = document.getElementById('editTitle').value;
     const text = document.getElementById('editText').value;
     const id = document.getElementById('editId').value;
-   
+    
     try {
         const res = await fetch(`http://localhost:3003/diary/${id}`, {
             method: 'PATCH', // or 'PATCH'
@@ -229,3 +243,25 @@ document.getElementById('editForm').addEventListener('submit', async function(e)
 document.getElementById('cancelEdit').addEventListener('click', function() {
     document.getElementById('editModal').classList.add('d-none');
 });
+
+const ratingContainer = document.getElementById('ratingContainer');
+const ratingValue = document.getElementById('ratingValue');
+const ratingDisplay = document.getElementById('ratingDisplay');
+
+// Generate boxes with hues from red (0deg) to green (120deg)
+for (let i = 1; i <= 10; i++) {
+    const hue = 0 + ((i - 1) * 12); // Red to green hue (0–120)
+    const box = document.createElement('div');
+    box.classList.add('rating-box');
+    box.dataset.value = i;
+    box.textContent = i;
+    box.style.backgroundColor = `hsl(${hue}, 70%, 75%)`;
+
+    box.addEventListener('click', () => {
+        document.querySelectorAll('.rating-box').forEach(b => b.classList.remove('selected'));
+        box.classList.add('selected');
+        ratingValue.value = i;
+    });
+
+    ratingContainer.appendChild(box);
+}

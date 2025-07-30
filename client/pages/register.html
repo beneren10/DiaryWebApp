@@ -75,44 +75,6 @@
     </form>
 
   </div>
-
-  <script>
-    document.getElementById('registerForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (password !== confirmPassword) {
-        alert("Passwords do not match.");
-        return;
-      }
-
-      // Example POST request — replace URL with your backend endpoint
-      try {
-        const response = await fetch('http://localhost:3003/users/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name, email, password })
-        });
-
-        if (response.ok) {
-          alert('Registration successful!');
-          window.location.href = 'login.html';
-        } else {
-          const err = await response.json();
-          alert('Registration failed: ' + (err.message || 'Please try again.'));
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Something went wrong. Please try again later.');
-      }
-    });
-  </script>
   <script src="./assets/register.js" defer></script>
 </body>
 </html>

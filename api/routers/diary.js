@@ -1,9 +1,10 @@
 const { Router } = require('express');
 
 const diaryController = require('../controllers/diary');
+const authenticator = require('../middleware/authenticator')
 const diaryRouter = Router();
 
-diaryRouter.get("/", diaryController.index);
+diaryRouter.get("/", authenticator, diaryController.index);
 diaryRouter.get("/:id", diaryController.show);
 diaryRouter.get("/entry/:date", diaryController.getByDate);
 diaryRouter.patch("/:id", diaryController.update);

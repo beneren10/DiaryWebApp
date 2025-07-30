@@ -20,6 +20,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     if (response.status == 200) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem('name', JSON.stringify(data.user.name))
         window.location.assign("index.html");
       } else {
         alert(data.error);

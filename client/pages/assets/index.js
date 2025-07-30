@@ -11,7 +11,9 @@ const getAll = document.querySelector('#getAll')
 
 document.querySelector('#logoutBtn').addEventListener('click', function (e) {
     e.preventDefault()
+    localStorage.removeItem('token')
     window.location.href = 'login.html'
+    
 })
 
 searchForm.addEventListener('submit',search)
@@ -52,7 +54,8 @@ async function postCard(data) {
         const response = await fetch(`http://localhost:3003/diary/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: localStorage.getItem('token')
             },
             body: JSON.stringify({
                 category: data.category,
@@ -140,8 +143,13 @@ async function deleteDiaryEntry(id,e) {
 }
 
 async function fetchDiary() {
+    const options = {
+        headers: {
+            Authorization: localStorage.getItem('token')
+        }
+    }
     try {
-        const response = await fetch(`http://localhost:3003/diary`)
+        const response = await fetch(`http://localhost:3003/diary`, options)
         if (response.ok) {
             const data = await response.json()
             entry(data)
@@ -248,14 +256,16 @@ const ratingContainer = document.getElementById('ratingContainer');
 const ratingValue = document.getElementById('ratingValue');
 const ratingDisplay = document.getElementById('ratingDisplay');
 
-// Generate boxes with hues from red (0deg) to green (120deg)
 for (let i = 1; i <= 10; i++) {
-    const hue = 0 + ((i - 1) * 12); // Red to green hue (0–120)
+    const saturation = 10 + ((i - 1) * (60 / 9));   // Saturation from 10% (almost grey) to 70% (blue)
+    const lightness = 90 - ((i - 1) * (15 / 9));    // Lightness from 90% (whitish) to 75% (blue)
+    const hue = 220;                                 // Fixed blue hue
+  
     const box = document.createElement('div');
     box.classList.add('rating-box');
     box.dataset.value = i;
     box.textContent = i;
-    box.style.backgroundColor = `hsl(${hue}, 70%, 75%)`;
+    box.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
     box.addEventListener('click', () => {
         document.querySelectorAll('.rating-box').forEach(b => b.classList.remove('selected'));
@@ -265,3 +275,10 @@ for (let i = 1; i <= 10; i++) {
 
     ratingContainer.appendChild(box);
 }
+
+function updateName(){
+    const name = localStorage.getItem('name')
+    document.querySelector('h1').innerText = 'Welcome ' + name.split(' ')[0].split('"')[1] + ' to Diary a Day'
+}
+
+updateName()

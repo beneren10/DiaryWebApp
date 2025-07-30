@@ -12,10 +12,8 @@ class Diary {
     this.user_id = user_id
   }
 
-  static async getAll() {
-    console.log('diary model');
-    const response = await db.query("SELECT * FROM diary ORDER BY id DESC");
-    console.log(response.rows);
+  static async getAll(user_id) {
+    const response = await db.query("SELECT * FROM diary WHERE user_id = $1 ORDER BY id DESC", [user_id]);
     if (response.rows.length === 0) {
       throw new Error("No diary posts available.");
     }
@@ -42,11 +40,11 @@ class Diary {
     return response.rows.map((entry) => new Diary(entry));
   }
 
-  static async create(data) {
+  static async create(data,user_id) {
     const { category, title, text, rating} = data;    
     const response = await db.query(
-      'INSERT INTO diary (category, text, title, rating) VALUES ($1, $2, $3, $4) RETURNING *;',
-      [category, text, title, rating]
+      'INSERT INTO diary (category, text, title, rating, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
+      [category, text, title, rating, user_id]
     );
     
 

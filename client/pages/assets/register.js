@@ -1,4 +1,4 @@
-document.getElementById("register-form").addEventListener("submit", async (e) => {
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const form = new FormData(e.target);
@@ -10,11 +10,11 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            username: form.get("username"),
-            password: form.get("password")
+            email: form.get("email"),
+            password: form.get("password"),
+            name: form.get("name")
         })
     }
-    console.log(options.body);
     const response = await fetch("http://localhost:3003/users/register", options);
     const data = await response.json();
 

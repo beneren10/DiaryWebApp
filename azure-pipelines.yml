@@ -45,6 +45,11 @@ stages:
       displayName: Build API Image
       steps:
         - task: Docker@2
+          displayName: Docker Login
+          inputs:
+            command: login
+            containerRegistry: $(dockerHubService)
+        - task: Docker@2
           inputs:
             containerRegistry: $(dockerHubService)
             repository: $(dockerHubUser)/node-api

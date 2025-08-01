@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: node-client
-          image: yourdockerhubuser/node-client:latest
+          image: beneren10/node-client:latest
           ports:
             - containerPort: 80
 ---

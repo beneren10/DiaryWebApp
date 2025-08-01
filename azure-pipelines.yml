@@ -1,34 +1,87 @@
 trigger:
-  - main
+  branches:
+    include:
+      - main
 
 variables:
   dockerHubService: 'docker-hub-service-connection'
-  dockerHubUser: 'yourdockerhubuser'
+  dockerHubUser: 'beneren10'
+  azureServiceConnection: 'AzureServiceConnection'  
+  imageTag: '$(Build.BuildId)'
 
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-  - job: BuildAndPushAPI
-    steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: $(dockerHubService)
-          repository: $(dockerHubUser)/node-api
-          command: buildAndPush
-          Dockerfile: docker/Dockerfile.api
-          tags: |
-            latest
-            $(Build.BuildId)
+stages:
 
-  - job: BuildAndPushClient
-    steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: $(dockerHubService)
-          repository: $(dockerHubUser)/node-client
-          command: buildAndPush
-          Dockerfile: docker/Dockerfile.client
-          tags: |
-            latest
-            $(Build.BuildId)
+- stage: Infrastructure
+  displayName: Provision AKS
+  jobs:
+    - job: Terraform
+      steps:
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: $(azureServiceConnection)
+            scriptType: bash
+            scriptLocation: inlineScript
+            workingDirectory: infra
+            inlineScript: |
+              terraform init
+              terraform apply -auto-approve
+
+- stage: Build
+  displayName: Build and Push Docker Images
+  dependsOn: Infrastructure
+  jobs:
+    - job: BuildAPI
+      displayName: Build API Image
+      steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: $(dockerHubService)
+            repository: $(dockerHubUser)/node-api
+            command: buildAndPush
+            Dockerfile: docker/Dockerfile.api
+            tags: |
+              latest
+              $(Build.BuildId)
+
+    - job: BuildClient
+      displayName: Build Client Image
+      steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: $(dockerHubService)
+            repository: $(dockerHubUser)/node-client
+            command: buildAndPush
+            Dockerfile: docker/Dockerfile.client
+            tags: |
+              latest
+              $(Build.BuildId)
+
+- stage: Deploy
+  displayName: Deploy to AKS
+  dependsOn: Build
+  jobs:
+    - job: DeployToAKS
+      steps:
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: $(azureServiceConnection)
+            scriptType: bash
+            scriptLocation: inlineScript
+            inlineScript: |
+              echo "Getting AKS credentials..."
+              az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing
+
+              echo "Updating Kubernetes manifests..."
+              sed -i "s|image:.*node-api.*|image: $(dockerHubUser)/node-api:$(imageTag)|g" k8s/api-deployment.yaml
+              sed -i "s|image:.*node-client.*|image: $(dockerHubUser)/node-client:$(imageTag)|g" k8s/client-deployment.yaml
+
+
+              echo "Applying Kubernetes manifests..."
+              kubectl apply -f k8s/postgres-secret.yaml
+              kubectl apply -f k8s/postgres-init-configmap.yaml
+              kubectl apply -f k8s/postgres.yaml
+              kubectl apply -f k8s/api-deployment.yaml
+              kubectl apply -f k8s/client-deployment.yaml

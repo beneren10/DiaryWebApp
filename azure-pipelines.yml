@@ -19,6 +19,15 @@ stages:
   jobs:
     - job: Terraform
       steps:
+        # Install Terraform CLI
+        - script: |
+            sudo apt-get update && sudo apt-get install -y wget unzip
+            wget https://releases.hashicorp.com/terraform/1.5.6/terraform_1.5.6_linux_amd64.zip
+            unzip terraform_1.5.6_linux_amd64.zip
+            sudo mv terraform /usr/local/bin/
+            terraform version
+          displayName: 'Install Terraform CLI'
+
         - task: AzureCLI@2
           inputs:
             azureSubscription: $(azureServiceConnection)
@@ -28,7 +37,6 @@ stages:
             inlineScript: |
               terraform init
               terraform apply -auto-approve
-
 - stage: Build
   displayName: Build and Push Docker Images
   dependsOn: Infrastructure

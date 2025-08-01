@@ -3,7 +3,7 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  default = "UK South"
+  default = "West Europe"
 }
 
 variable "cluster_name" {

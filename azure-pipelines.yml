@@ -1,0 +1,34 @@
+trigger:
+  - main
+
+variables:
+  dockerHubService: 'docker-hub-service-connection'
+  dockerHubUser: 'yourdockerhubuser'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: BuildAndPushAPI
+    steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: $(dockerHubService)
+          repository: $(dockerHubUser)/node-api
+          command: buildAndPush
+          Dockerfile: docker/Dockerfile.api
+          tags: |
+            latest
+            $(Build.BuildId)
+
+  - job: BuildAndPushClient
+    steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: $(dockerHubService)
+          repository: $(dockerHubUser)/node-client
+          command: buildAndPush
+          Dockerfile: docker/Dockerfile.client
+          tags: |
+            latest
+            $(Build.BuildId)

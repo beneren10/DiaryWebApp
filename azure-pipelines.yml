@@ -44,11 +44,18 @@ stages:
     - job: BuildAPI
       displayName: Build API Image
       steps:
+        - script: |
+            echo "Docker Hub service: $(dockerHubService)"
+            echo "Docker Hub user: $(dockerHubUser)"
+            echo "Build sources directory: $(Build.SourcesDirectory)"
+          displayName: 'Debug Variables'
+        
         - task: Docker@2
           displayName: Docker Login
           inputs:
             command: login
             containerRegistry: $(dockerHubService)
+
         - task: Docker@2
           inputs:
             containerRegistry: $(dockerHubService)

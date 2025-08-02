@@ -1,16 +1,4 @@
-FROM node:18 AS builder
-
-WORKDIR /app
-
-COPY client/package*.json ./
-RUN npm install
-
-COPY client .
-
-RUN npm run build
-
-EXPOSE 80
-CMD ["npx", "serve", "-s", "build", "-l", "80"]
-
 FROM nginx:alpine
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY client /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

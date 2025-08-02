@@ -1,25 +1,24 @@
-resource "azurerm_resource_group" "main" {
-  name     = var.resource_group_name
-  location = var.location
+provider "azurerm" {
+  features {}
 }
 
-resource "azurerm_kubernetes_cluster" "aks_cluster" {
+data "azurerm_resource_group" "existing" {
+  name = var.resource_group_name
+}
+
+data "azurerm_kubernetes_cluster" "existing" {
   name                = var.cluster_name
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
-  dns_prefix          = "aks-${var.cluster_name}"
+  resource_group_name = data.azurerm_resource_group.existing.name
+}
 
-  default_node_pool {
-    name       = "default"
-    node_count = 1
-    vm_size    = "Standard_a2_v2"
-  }
+output "aks_cluster_name" {
+  value = data.azurerm_kubernetes_cluster.existing.name
+}
 
-  identity {
-    type = "SystemAssigned"
-  }
+output "aks_cluster_fqdn" {
+  value = data.azurerm_kubernetes_cluster.existing.fqdn
+}
 
-  tags = {
-    Environment = "dev"
-  }
+output "aks_resource_group" {
+  value = data.azurerm_kubernetes_cluster.existing.resource_group_name
 }

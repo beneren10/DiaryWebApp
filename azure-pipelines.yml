@@ -41,7 +41,7 @@ stages:
   displayName: Build and Push Docker Images
   dependsOn: Infrastructure
   jobs:
-    - job: BuildAPI
+    - job: BuildAPIl
       displayName: Build API Image
       steps:
         - script: |

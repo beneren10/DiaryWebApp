@@ -55,6 +55,7 @@ stages:
             repository: $(dockerHubUser)/node-api
             command: buildAndPush
             Dockerfile: docker/Dockerfile.api
+            buildContext: $(Build.SourcesDirectory)
             tags: |
               latest
               $(Build.BuildId)
@@ -68,6 +69,7 @@ stages:
             repository: $(dockerHubUser)/node-client
             command: buildAndPush
             Dockerfile: docker/Dockerfile.client
+            buildContext: $(Build.SourcesDirectory)
             tags: |
               latest
               $(Build.BuildId)

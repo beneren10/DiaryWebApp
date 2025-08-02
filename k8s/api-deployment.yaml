@@ -42,11 +42,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-api-service
+  name: my-api-service
 spec:
   selector:
-    app: node-api
+    app: my-api
   ports:
-    - port: 3000
-      targetPort: 3000
-  type: ClusterIP
+    - protocol: TCP
+      port: 80          # Public port
+      targetPort: 3000  # Container port your app listens on
+  type: LoadBalancer
+

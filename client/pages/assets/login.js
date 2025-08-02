@@ -15,7 +15,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     }
 
-    const response = await fetch("http://localhost:3003/users/login", options);
+    const response = await fetch("http://52.174.23.45/users/login", options);
     const data = await response.json();
 
     if (response.status == 200) {

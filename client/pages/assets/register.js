@@ -15,7 +15,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
             name: form.get("name")
         })
     }
-    const response = await fetch("http://localhost:3003/users/register", options);
+    const response = await fetch("http://52.174.23.45/users/register", options);
     const data = await response.json();
 
     if (response.status == 201) {

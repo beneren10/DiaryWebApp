@@ -87,7 +87,7 @@ stages:
             scriptLocation: inlineScript
             inlineScript: |
               echo "Getting AKS credentials..."
-              az aks get-credentials --resource-group myResourceGroup --name myAKSCluster --overwrite-existing
+              az aks get-credentials --resource-group RG_CICD --name myAKSCluster --overwrite-existing
 
               echo "Updating Kubernetes manifests..."
               sed -i "s|image:.*node-api.*|image: $(dockerHubUser)/node-api:$(imageTag)|g" k8s/api-deployment.yaml

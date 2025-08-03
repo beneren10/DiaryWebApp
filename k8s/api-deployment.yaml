@@ -50,5 +50,5 @@ spec:
     - protocol: TCP
       port: 3000          # Public port
       targetPort: 3000  # Container port your app listens on
-  type: ClusterIP
+  type: LoadBalancer
 

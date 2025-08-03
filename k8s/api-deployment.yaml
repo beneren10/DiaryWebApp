@@ -40,12 +40,12 @@ spec:
             - name: SECRET_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: SECRET_TOKEN
+                  name: secret-token
                   key: SECRET_TOKEN
             - name: BCRYPT_SALT_ROUNDS
               valueFrom:
                 secretKeyRef:
-                  name: BCRYPT_SALT_ROUNDS
+                  name: bcyrpt-salt-rounds
                   key: BCRYPT_SALT_ROUNDS
 
 ---

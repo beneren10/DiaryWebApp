@@ -51,7 +51,7 @@ function newItem(e){
 
 async function postCard(data) {
     try {
-        const response = await fetch(`http://52.174.23.45/diary/`, {
+        const response = await fetch(`http://9.163.217.198/diary/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ async function postCard(data) {
 
 async function getNewCard(data) {
     try {
-        const response = await fetch(`http://52.174.23.45/diary/${data}`)
+        const response = await fetch(`http://9.163.217.198/diary/${data}`)
         if (response.ok) {
             const data = await response.json()
             entry(data)
@@ -127,7 +127,7 @@ function deleteItem(e){
 
 async function deleteDiaryEntry(id,e) {
     try {
-        const response = await fetch(`http://52.174.23.45/diary/${id}`, {
+        const response = await fetch(`http://9.163.217.198/diary/${id}`, {
             method: 'DELETE'
         });
 
@@ -149,7 +149,7 @@ async function fetchDiary() {
         }
     }
     try {
-        const response = await fetch(`http://52.174.23.45/diary`, options)
+        const response = await fetch(`http://9.163.217.198/diary`, options)
         if (response.ok) {
             const data = await response.json()
             entry(data)
@@ -228,7 +228,7 @@ document.getElementById('editForm').addEventListener('submit', async function(e)
     const id = document.getElementById('editId').value;
     
     try {
-        const res = await fetch(`http://52.174.23.45/diary/${id}`, {
+        const res = await fetch(`http://9.163.217.198/diary/${id}`, {
             method: 'PATCH', // or 'PATCH'
             headers: {
                 'Content-Type': 'application/json'

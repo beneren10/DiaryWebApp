@@ -15,7 +15,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     }
     console.log(options);
-    const response = await fetch("http://52.174.23.45/users/login", options);
+    const response = await fetch("http://9.163.217.198/users/login", options);
     const data = await response.json();
     console.log('hit');
     if (response.status == 200) {

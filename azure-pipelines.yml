@@ -41,35 +41,55 @@ stages:
   displayName: Build and Push Docker Images
   dependsOn: Infrastructure
   jobs:
-    - job: BuildAPIl
-      displayName: Build API Image
+    - job: BuildAPI
+      displayName: Build API Image with Docker cache
       steps:
-        - script: |
-            echo "Docker Hub service: $(dockerHubService)"
-            echo "Docker Hub user: $(dockerHubUser)"
-            echo "Build sources directory: $(Build.SourcesDirectory)"
-          displayName: 'Debug Variables'
-        
+        # Restore Docker build cache from previous run
+        - task: Cache@2
+          inputs:
+            key: 'docker-api-cache | "$(Agent.OS)" | **/docker/Dockerfile.api'
+            path: $(Pipeline.Workspace)/.docker-api-cache
+            restoreKeys: |
+              docker-api-cache | "$(Agent.OS)"
+
+        # Docker login
         - task: Docker@2
           displayName: Docker Login
           inputs:
             command: login
             containerRegistry: $(dockerHubService)
 
-        - task: Docker@2
-          inputs:
-            containerRegistry: $(dockerHubService)
-            repository: beneren10/node-api
-            command: buildAndPush
-            Dockerfile: docker/Dockerfile.api
-            buildContext: $(Build.SourcesDirectory)
-            tags: |
-              latest
-              $(Build.BuildId)
+        # Build and push with cache-from and cache-to
+        - script: |
+            docker build \
+              --cache-from=type=local,src=$(Pipeline.Workspace)/.docker-api-cache \
+              --cache-to=type=local,dest=$(Pipeline.Workspace)/.docker-api-cache-new,mode=max \
+              -t $(dockerHubUser)/node-api:$(Build.BuildId) \
+              -t $(dockerHubUser)/node-api:latest \
+              -f docker/Dockerfile.api \
+              $(Build.SourcesDirectory)
+
+            docker push $(dockerHubUser)/node-api:$(Build.BuildId)
+            docker push $(dockerHubUser)/node-api:latest
+          displayName: Build and Push API Docker Image
+
+        # Save Docker cache for next build
+        - script: |
+            rm -rf $(Pipeline.Workspace)/.docker-api-cache
+            mv $(Pipeline.Workspace)/.docker-api-cache-new $(Pipeline.Workspace)/.docker-api-cache
+          displayName: Save Docker Cache
+
 
     - job: BuildClient
       displayName: Build Client Image
       steps:
+        - task: Cache@2
+          inputs:
+            key: 'docker-client-cache | "$(Agent.OS)" | **/docker/Dockerfile.client'
+            path: $(Pipeline.Workspace)/.docker-client-cache
+            restoreKeys: |
+              docker-client-cache | "$(Agent.OS)"
+
         - task: Docker@2
           inputs:
             containerRegistry: $(dockerHubService)
@@ -80,6 +100,24 @@ stages:
             tags: |
               latest
               $(Build.BuildId)
+        - script: |
+            docker build \
+              --cache-from=type=local,src=$(Pipeline.Workspace)/.docker-client-cache \
+              --cache-to=type=local,dest=$(Pipeline.Workspace)/.docker-client-cache-new,mode=max \
+              -t $(dockerHubUser)/node-client:$(Build.BuildId) \
+              -t $(dockerHubUser)/node-client:latest \
+              -f docker/Dockerfile.client \
+              $(Build.SourcesDirectory)
+
+            docker push $(dockerHubUser)/node-client:$(Build.BuildId)
+            docker push $(dockerHubUser)/node-client:latest
+          displayName: Build and Push Client Docker Image
+
+        # Save Docker cache for next build
+        - script: |
+            rm -rf $(Pipeline.Workspace)/.docker-client-cache
+            mv $(Pipeline.Workspace)/.docker-client-cache-new $(Pipeline.Workspace)/.docker-client-cache
+          displayName: Save Docker Cache
 
 - stage: Deploy
   displayName: Deploy to AKS

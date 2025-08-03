@@ -15,7 +15,7 @@ CREATE TABLE diary (
     text TEXT NOT NULL,
     title VARCHAR(50) NOT NULL,
     date DATE DEFAULT CURRENT_DATE,
-    rating INT NOT NULL DEFAULT=5,
+    rating INT NOT NULL DEFAULT 5,
     FOREIGN KEY (user_id) REFERENCES user_account(user_id) ON DELETE CASCADE 
 );
 

@@ -45,7 +45,7 @@ spec:
             - name: BCRYPT_SALT_ROUNDS
               valueFrom:
                 secretKeyRef:
-                  name: bcyrpt-salt-rounds
+                  name: bcrypt-salt-rounds
                   key: BCRYPT_SALT_ROUNDS
 
 ---

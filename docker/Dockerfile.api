@@ -8,7 +8,6 @@ COPY ./api/package*.json ./
 RUN npm install
 
 COPY ./api .
-COPY ./api/.env .env
 
 EXPOSE 3000
 CMD ["npm", "start"]

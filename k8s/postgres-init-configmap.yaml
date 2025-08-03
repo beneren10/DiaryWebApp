@@ -11,6 +11,7 @@ data:
         user_id INT GENERATED ALWAYS AS IDENTITY,
         email VARCHAR(30) UNIQUE NOT NULL,
         password CHAR(60) NOT NULL,
+        name VARCHAR(30) NOT NULL,
         PRIMARY KEY (user_id)
     );
 

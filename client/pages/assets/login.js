@@ -14,10 +14,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             password: form.get("password")
         })
     }
-
+    console.log(options);
     const response = await fetch("http://52.174.23.45/users/login", options);
     const data = await response.json();
-
+    console.log('hit');
     if (response.status == 200) {
         localStorage.setItem("token", data.token);
         localStorage.setItem('name', JSON.stringify(data.user.name))

@@ -16,6 +16,7 @@ app.use(logRouters)
 app.use("/diary", diaryRouter)
 app.use("/users", userRouter);
 
+
 app.get("/", (req, res) => {
   res.status(200).json({
     title: "Bridget Jones's Diary!",
@@ -23,6 +24,17 @@ app.get("/", (req, res) => {
   })
 })
 
+const db = require('./db'); // your DB connection
+
+app.get('/health', async (req, res) => {
+  try {
+    // test DB connection
+    await db.raw('SELECT * FROM diary;'); // for Knex + PostgreSQL
+    res.status(200).json({ status: 'ok', db: 'connected' });
+  } catch (err) {
+    res.status(500).json({ status: 'fail', db: 'disconnected', error: err.message });
+  }
+});
 
 
 module.exports = app;

@@ -45,7 +45,7 @@ metadata:
   name: my-api-service
 spec:
   selector:
-    app: my-api
+    app: node-api
   ports:
     - protocol: TCP
       port: 80          # Public port

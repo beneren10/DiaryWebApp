@@ -59,6 +59,15 @@ stages:
             command: login
             containerRegistry: $(dockerHubService)
 
+        - script: |
+            export DOCKER_BUILDKIT=0
+            docker build -t $(dockerHubUser)/node-api:$(imageTag) -f docker/Dockerfile.api .
+            docker tag $(dockerHubUser)/node-api:$(imageTag) $(dockerHubUser)/node-api:latest
+            docker push $(dockerHubUser)/node-api:$(imageTag)
+            docker push $(dockerHubUser)/node-api:latest
+          displayName: 'Manual Docker Build & Push (BuildKit Off)'
+
+
         # Build and push with cache-from and cache-to
         - script: |
             docker build \
@@ -81,7 +90,7 @@ stages:
 
 
     - job: BuildClient
-      displayName: Build Client Image
+      displayName: Build Client Image with cache
       steps:
         - task: Cache@2
           inputs:
@@ -89,17 +98,6 @@ stages:
             path: $(Pipeline.Workspace)/.docker-client-cache
             restoreKeys: |
               docker-client-cache | "$(Agent.OS)"
-
-        - task: Docker@2
-          inputs:
-            containerRegistry: $(dockerHubService)
-            repository: beneren10/node-client
-            command: buildAndPush
-            Dockerfile: docker/Dockerfile.client
-            buildContext: $(Build.SourcesDirectory)
-            tags: |
-              latest
-              $(Build.BuildId)
         - script: |
             docker build \
               --cache-from=type=local,src=$(Pipeline.Workspace)/.docker-client-cache \

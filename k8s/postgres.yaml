@@ -8,7 +8,9 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,7 +21,9 @@ spec:
   ports:
     - port: 5432
       targetPort: 5432
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,7 +39,6 @@ spec:
         app: postgres
     spec:
       containers:
-        # This is the container which uses Postgres Img
         - name: postgres
           image: postgres:15
           ports:
@@ -46,18 +49,8 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
-        # This is the config map container name, which uses init-sql to populate your database
-        - name: postgres
-          image: postgres:15
-          ports:
-            - containerPort: 5432
-          envFrom:
-            - secretRef:
-                name: postgres-secret
-          volumeMounts:
             - name: init-sql
-              mountPath: /docker-entrypoint-initdb.d/setup.sql
-              subPath: setup.sql
+              mountPath: /docker-entrypoint-initdb.d
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
@@ -65,5 +58,3 @@ spec:
         - name: init-sql
           configMap:
             name: postgres-init-script
-     
-

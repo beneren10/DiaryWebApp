@@ -10,6 +10,7 @@ CREATE TABLE user_account (
 
 CREATE TABLE diary (
     id INT GENERATED ALWAYS AS IDENTITY,
+    user_id INT NOT NULL,
     category VARCHAR(50) NOT NULL,
     text TEXT NOT NULL,
     title VARCHAR(50) NOT NULL,

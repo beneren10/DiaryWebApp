@@ -26,11 +26,11 @@ resource "azurerm_kubernetes_cluster" "new" {
 
 
 output "aks_cluster_name" {
-  value = data.azurerm_kubernetes_cluster.new
+  value = azurerm_kubernetes_cluster.new.name
 }
 
 output "aks_cluster_fqdn" {
-  value = data.azurerm_kubernetes_cluster.new.fqdn
+  value = azurerm_kubernetes_cluster.new.fqdn
 }
 
 output "aks_resource_group" {

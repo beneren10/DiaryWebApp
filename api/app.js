@@ -18,7 +18,7 @@ app.use("/users", userRouter);
 
 const path = require('path');
 
-app.use('/assets', express.static(path.join(__dirname, 'client', 'pages', 'assets')));
+app.use('/assets', express.static(path.join(__dirname, '..', 'client', 'pages', 'assets')));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'pages', 'register.html'));

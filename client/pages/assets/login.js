@@ -1,3 +1,5 @@
+const API_URL = '108.142.77.58:3000'
+
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -15,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     }
     console.log(options);
-    const response = await fetch("http://132.220.101.170:3000/users/login", options);
+    const response = await fetch(`http://${API_URL}/users/login`, options);
     const data = await response.json();
     console.log('hit');
     if (response.status == 200) {

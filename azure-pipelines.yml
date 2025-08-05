@@ -115,3 +115,20 @@ stages:
               kubectl apply -f k8s/postgres.yaml
               kubectl apply -f k8s/api-deployment.yaml
               kubectl apply -f k8s/client-deployment.yaml
+
+              echo "Waiting for my-api-service External IP..."
+              for i in {1..30}; do
+                IP=$(kubectl get svc my-api-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+                if [[ -n "$IP" ]]; then break; fi
+                echo "Waiting for External IP... attempt $i"
+                sleep 10
+              done
+
+              if [[ -z "$IP" ]]; then
+                echo "ERROR: my-api-service external IP not assigned."
+                exit 1
+              fi
+
+              echo "window.ENV = { API_URL: '$IP:3000' };" > client/pages/assets/env.js
+              echo "Generated client/.env.production:"
+              cat client/pages/assets/env.js

@@ -1,7 +1,5 @@
-
-
 const api = require("./api/app")
-const port = 3000;
+const port = process.env.PORT
 
 
 api.listen(port,() => {

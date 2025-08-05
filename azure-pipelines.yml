@@ -36,10 +36,17 @@ jobs:
     inputs:
       azureSubscription: $(azureSubscription)
       appName: $(webAppName)
-      package: '$(Pipeline.Workspace)/drop/$(webAppName).zip'
+      package: '$(Build.ArtifactStagingDirectory)/$(webAppName).zip'
     displayName: 'Deploy Node.js app to Azure App Service'
 
   - script: |
-      npm setupdb
+      echo "Running DB migrations..."
+      npm setup-db
     displayName: 'Run DB migrations'
-    workingDirectory: '$(Build.SourcesDirectory)'
+    env:
+      DB_USER: $(DB_USER)
+      DB_PASSWORD: $(DB_PASSWORD)
+      DB_NAME: $(DB_NAME)
+      DB_HOST: $(DB_HOST)
+      DB_PORT: $(DB_PORT)
+    workingDirectory: '$(System.DefaultWorkingDirectory)'

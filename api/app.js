@@ -16,12 +16,14 @@ app.use(logRouters)
 app.use("/diary", diaryRouter)
 app.use("/users", userRouter);
 
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.get("/", (req, res) => {
-  res.status(200).json({
-    title: "Bridget Jones's Diary!",
-    description: "Do you love the sound of your own voice? Do you feel that you have something to share that you don't want anyone else to see?"
-  })
-})
+  res.sendFile(path.join(__dirname, 'client', 'register.html'));
+});
+
 
 module.exports = app;

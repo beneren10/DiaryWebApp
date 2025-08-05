@@ -41,7 +41,7 @@ jobs:
 
   - script: |
       echo "Running DB migrations..."
-      npm setup-db
+      npm run setup-db
     displayName: 'Run DB migrations'
     env:
       DB_USER: $(DB_USER)

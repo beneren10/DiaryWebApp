@@ -121,7 +121,7 @@ stages:
                 IP=$(kubectl get svc my-api-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
                 if [[ -n "$IP" ]]; then break; fi
                 echo "Waiting for External IP... attempt $i"
-                sleep 10
+                sleep 11
               done
 
               if [[ -z "$IP" ]]; then

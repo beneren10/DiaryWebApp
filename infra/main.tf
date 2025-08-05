@@ -34,5 +34,5 @@ output "aks_cluster_fqdn" {
 }
 
 output "aks_resource_group" {
-  value = data.azurerm_kubernetes_cluster.existing.resource_group_name
+  value = azurerm_kubernetes_cluster.new.resource_group_name
 }

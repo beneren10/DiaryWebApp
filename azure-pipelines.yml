@@ -110,7 +110,6 @@ stages:
               sed -i "s|image:.*node-client.*|image: beneren10/node-client:$(imageTag)|g" k8s/client-deployment.yaml
 
               echo "Applying Kubernetes manifests..."
-              kubectl apply -f k8s/postgres-secret.yaml
               kubectl apply -f k8s/postgres-init-configmap.yaml
               kubectl apply -f k8s/postgres.yaml
               kubectl apply -f k8s/api-deployment.yaml

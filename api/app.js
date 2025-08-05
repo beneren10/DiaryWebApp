@@ -18,7 +18,7 @@ app.use("/users", userRouter);
 
 const path = require('path');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client')));
 
 
 app.get("/", (req, res) => {

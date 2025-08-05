@@ -8,4 +8,8 @@ const db = new Pool ({
     database: process.env.DB_NAME,
 })
 
+db.connect()
+  .then(() => console.log("✅ Connected to PostgreSQL"))
+  .catch(err => console.error("❌ PostgreSQL connection error:", err));
+
 module.exports = db

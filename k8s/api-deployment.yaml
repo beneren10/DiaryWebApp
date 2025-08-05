@@ -37,12 +37,12 @@ spec:
                   secretKeyRef:
                     name: postgres-secret
                     key: POSTGRES_DB
-            - name: secret-token
+            - name: SECRET_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
                   key: SECRET_TOKEN
-            - name: bcrypt_salt_rounds
+            - name: BCRYPT_SALT_ROUNDS
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret

@@ -96,6 +96,15 @@ stages:
               echo "Getting AKS credentials..."
               az aks get-credentials --resource-group RG_CICD --name myAKSCluster --overwrite-existing
 
+              echo "Creating postgres-secret dynamically from pipeline secrets..."
+              kubectl create secret generic postgres-secret \
+              --from-literal=POSTGRES_USER=$(POSTGRES_USER) \
+              --from-literal=POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
+              --from-literal=POSTGRES_DB=$(POSTGRES_DB) \
+              --from-literal=BCRYPT_SALT_ROUNDS=$(BCRYPT_SALT_ROUNDS) \
+              --from-literal=SECRET_TOKEN=$(SECRET_TOKEN) \
+              --dry-run=client -o yaml | kubectl apply -f -
+
               echo "Updating Kubernetes manifests..."
               sed -i "s|image:.*node-api.*|image: beneren10/node-api:$(imageTag)|g" k8s/api-deployment.yaml
               sed -i "s|image:.*node-client.*|image: beneren10/node-client:$(imageTag)|g" k8s/client-deployment.yaml

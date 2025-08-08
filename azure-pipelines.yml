@@ -17,7 +17,7 @@ jobs:
     displayName: 'Use Node.js'
 
   - script: |
-      npm install
+      npm ci
     displayName: 'Install dependencies'
 
   - task: ArchiveFiles@2
@@ -36,7 +36,7 @@ jobs:
     inputs:
       azureSubscription: $(azureSubscription)
       appName: $(webAppName)
-      package: '$(Build.ArtifactStagingDirectory)/drop/$(webAppName).zip'
+      package: '$(Build.ArtifactStagingDirectory)/$(webAppName).zip'
     displayName: 'Deploy Node.js app to Azure App Service'
 
   - script: |

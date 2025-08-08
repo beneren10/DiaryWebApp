@@ -32,7 +32,6 @@ class Diary {
   }
 
   static async getByDate(date) {
-    console.log("date", date);
     const response = await db.query("SELECT * FROM diary WHERE date = $1;", [date]);
     if (response.rows.length === 0) {
       throw new Error("No diary entries found for this date.");
@@ -54,7 +53,6 @@ class Diary {
   async update(data) {
     const { text, title } = data;
     const existingEntry = await db.query("SELECT id FROM diary WHERE id = $1;", [this.id]);
-    console.log(existingEntry);
     if (existingEntry.rows.length > 0) {
       const response = await db.query("UPDATE diary SET date = CURRENT_DATE, category = $1, text = $2, title = $3 WHERE id = $4 RETURNING *;",[this.category, text, title, this.id]
       );

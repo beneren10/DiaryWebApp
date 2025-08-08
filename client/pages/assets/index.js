@@ -38,7 +38,6 @@ function newItem(e){
     e.preventDefault()
     const formData = new FormData(diaryEntry);
     const formObject = Object.fromEntries(formData.entries()); // Convert FormData to an object
-    console.log(formObject)
     if (formObject){
         if (formObject.category && formObject.text && formObject.title){
             addCard(formObject)
@@ -68,7 +67,6 @@ async function postCard(data) {
         })
         if (response.ok) {
             const postedCard = await response.json()
-            console.log(postedCard)
         } else {
             throw "Error http status code " + response.status
         }
@@ -116,7 +114,6 @@ function deleteItem(e){
     const confirmed = confirm("Are you sure you want to delete this diary entry?")
     if (!confirmed) return 
 
-    console.log(e.target)
     const card = e.target.closest('.card'); // Find the closest parent with the class 'card'
     if (card) {
         const cardTitle = card.querySelector('.card-title')

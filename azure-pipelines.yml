@@ -17,7 +17,7 @@ jobs:
     displayName: 'Use Node.js'
 
   - script: |
-      npm ci
+      npm install
     displayName: 'Install dependencies'
 
   - task: ArchiveFiles@2

@@ -36,7 +36,7 @@ jobs:
     inputs:
       azureSubscription: $(azureSubscription)
       appName: $(webAppName)
-      package: '$(Build.ArtifactStagingDirectory)/$(webAppName).zip'
+      package: '$(Build.ArtifactStagingDirectory)/drop/$(webAppName).zip'
     displayName: 'Deploy Node.js app to Azure App Service'
 
   - script: |

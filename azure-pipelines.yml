@@ -39,14 +39,3 @@ jobs:
       package: '$(Build.ArtifactStagingDirectory)/$(webAppName).zip'
     displayName: 'Deploy Node.js app to Azure App Service'
 
-  - script: |
-      echo "Running DB migrations..."
-      npm run setup-db
-    displayName: 'Run DB migrations'
-    env:
-      DB_USER: $(DB_USER)
-      DB_PASSWORD: $(DB_PASSWORD)
-      DB_NAME: $(DB_NAME)
-      DB_HOST: $(DB_HOST)
-      DB_PORT: $(DB_PORT)
-    workingDirectory: '$(System.DefaultWorkingDirectory)'

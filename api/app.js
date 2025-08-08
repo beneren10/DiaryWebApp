@@ -16,6 +16,8 @@ app.use("/diary", diaryRouter)
 app.use("/users", userRouter);
 
 app.get('/health', (req, res) => res.send('OK'));
+app.get('/port', (res,res) => res.send(process.env.PORT))
+app.get('/route', (res,res) => res.send(__dirname))
 
 // Serve all static files under /assets path
 app.use('/assets', express.static(path.join(__dirname, 'client', 'pages', 'assets')));

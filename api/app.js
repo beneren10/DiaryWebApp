@@ -17,10 +17,10 @@ app.use("/users", userRouter);
 
 app.get('/health', (req, res) => res.send('OK'));
 
-app.use('/assets', express.static(path.join(__dirname, 'client', 'pages', 'assets')));
+app.use('/assets', express.static(path.join(__dirname, 'client', 'pages')));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'pages', 'register.html'));
+  res.sendFile(path.join(__dirname, 'client', 'pages','register.html'));
 });
 
 

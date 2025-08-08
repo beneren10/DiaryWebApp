@@ -17,11 +17,23 @@ app.use("/users", userRouter);
 
 app.get('/health', (req, res) => res.send('OK'));
 
-app.use('/assets', express.static(path.join(__dirname, 'client', 'pages')));
+// Serve all static files under /assets path
+app.use('/assets', express.static(path.join(__dirname, 'client', 'pages', 'assets')));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'pages','register.html'));
+// Serve all HTML files in /client/pages as static files
+app.use(express.static(path.join(__dirname, 'client', 'pages')));
+
+// On root, send index.html or register.html as you prefer
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'pages', 'register.html'));
 });
+
+// Example health check route
+app.get('/health', (req, res) => res.send('OK'));
+
+module.exports = app;
+
+
 
 
 module.exports = app;

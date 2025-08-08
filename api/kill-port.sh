@@ -1,4 +1,4 @@
-PORT=3003
+PORT=3000
 PID=$(lsof -ti tcp:$PORT)
 if [ -n "$PID" ]; then
   kill -9 $PID

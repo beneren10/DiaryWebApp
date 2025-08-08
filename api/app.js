@@ -15,6 +15,8 @@ app.use(logRouters)
 app.use("/diary", diaryRouter)
 app.use("/users", userRouter);
 
+app.get('/health', (req, res) => res.send('OK'));
+
 app.use('/assets', express.static(path.join(__dirname, 'client', 'pages', 'assets')));
 
 app.get("/", (req, res) => {

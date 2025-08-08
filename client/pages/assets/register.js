@@ -20,7 +20,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     console.log(options);
     const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/users/register`, options);
     const data = await response.json();
-    console.log('hit');
+    console.log('success log in');
     if (response.status == 201) {
         window.location.assign("login.html");
     } else {

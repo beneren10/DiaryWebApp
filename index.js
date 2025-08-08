@@ -1,5 +1,5 @@
 const api = require("./api/app")
-const port = process.env.PORT
+const port = process.env.PORT || 8080'
 
 
 api.listen(port,() => {

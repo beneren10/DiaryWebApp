@@ -28,12 +28,5 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'pages', 'register.html'));
 });
 
-// Example health check route
-app.get('/health', (req, res) => res.send('OK'));
-
 module.exports = app;
 
-
-
-
-module.exports = app;

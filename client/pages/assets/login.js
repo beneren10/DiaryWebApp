@@ -17,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     }
     console.log(options);
-    const response = await fetch(`http://${API_URL}/users/login`, options);
+    const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/users/login`, options);
     const data = await response.json();
     console.log('hit');
     if (response.status == 200) {

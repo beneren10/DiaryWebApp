@@ -19,11 +19,8 @@ app.get('/health', (req, res) => res.send('OK'));
 app.get('/port', (req,res) => res.send(process.env.PORT))
 app.get('/route', (req,res) => res.send(__dirname))
 
-// Serve all static files under /assets path
-app.use('/assets', express.static(path.join(__dirname, 'client', 'pages', 'assets')));
-
 // Serve all HTML files in /client/pages as static files
-app.use(express.static(path.join(__dirname, 'client', 'pages')));
+app.use(express.static(path.join(__dirname, '..', 'client', 'pages')));
 
 // On root, send index.html or register.html as you prefer
 app.get('/', (req, res) => {

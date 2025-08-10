@@ -60,13 +60,13 @@ class User {
     }
 
     static async updateToken(data){
-        const { token, tokenExpiry, email} = data
+        const { resettoken, resettokenExpiry, email} = data
         const response = await db.query(`
             UPDATE user_account
             SET resettoken = $1, resettokenexpiry = $2
             WHERE email = $3
             RETURNING *`, 
-            [token,tokenExpiry,email])
+            [resettoken,resettokenExpiry,email])
 
         if (response.rows.length === 0) {
             throw new Error('No user found with this email')

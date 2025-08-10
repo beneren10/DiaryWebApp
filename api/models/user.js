@@ -66,7 +66,7 @@ class User {
             SET resettoken = $1, resettokenexpiry = $2
             WHERE email = $3
             RETURNING *`, 
-            [token],[tokenExpiry],[email])
+            [token,tokenExpiry,email])
 
         if (response.rows.length === 0) {
             throw new Error('No user found with this email')
@@ -81,7 +81,7 @@ class User {
             SET resettoken = $1, resettokenexpiry = $2, password = $3
             WHERE email = $4
             RETURNING *`, 
-            [token],[tokenExpiry],[password],[email])
+            [token,tokenExpiry,password,email])
 
         if (response.rows.length === 0) {
             throw new Error('No user found with this email')

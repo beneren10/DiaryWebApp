@@ -59,7 +59,7 @@ class User {
         return newUser;
     }
 
-    async updateToken(data){
+    static async updateToken(data){
         const { token, tokenExpiry, email} = data
         const response = await db.query(`
             UPDATE user_account
@@ -74,7 +74,7 @@ class User {
         return new User(response.rows[0])
     }
 
-    async updateTokenPass(data){
+    static async updateTokenPass(data){
         const { token, tokenExpiry, password, email} = data
         const response = await db.query(`
             UPDATE user_account

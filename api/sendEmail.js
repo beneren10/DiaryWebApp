@@ -15,7 +15,7 @@ async function SendEmail(to, subject, text) {
 
   // Send mail
   await transporter.sendMail({
-    from: '"Diary a Day" <your-email@example.com>',
+    from: '"Diary a Day" <diaryaday5411@gmail.com>',
     to,
     subject,
     text,

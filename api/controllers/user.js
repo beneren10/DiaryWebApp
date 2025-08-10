@@ -69,6 +69,7 @@ async function reset_request(req,res) {
         resetTokenExpiry: new Date(Date.now() + 3600000),
         email: data.email
       }
+      
       await User.updateToken(tokenData)
       
 

@@ -63,10 +63,14 @@ async function reset_request(req,res) {
       if(!user) { throw new Error('No user with this email') }
 
       const token = crypto.randomBytes(32).toString('hex');
-
-      user.resetToken = token;
-      user.resetTokenExpiry = Date.now() + 3600000;
-      await user.save();
+      
+      const tokenData = {
+        resetToken: token,
+        resetTokenExpiry: Date(Date.now() + 3600000),
+        email: data.email
+      }
+      await User.updateToken(tokenData)
+      
 
       const resetUrl = `https://my-nodejs-appservice.azurewebsites.net/users/reset-verify?token=${token}`;
 
@@ -101,12 +105,15 @@ async function reset_password(req,res) {
   if (!user) return res.status(400).send(`Invalid token or expired token`)
     
   const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10);
+  const password = await bcrypt.hash(newPassword, salt)
 
-  user.password = await bcrypt.hash(newPassword, salt);
-  user.resetToken = undefined;
-  user.resetTokenExpiry = undefined;
+  const tokenDataPass = {
+    password: password,
+    resetToken: undefined,
+    resetTokenExpiry: undefined,
+  }
 
-  await user.save();
+  await User.updateTokenPass(tokenDataPass)
   res.send('Password has been reset succesfully')
 }
 

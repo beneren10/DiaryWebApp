@@ -2,12 +2,14 @@ const db = require('../database/connect');
 
 class User {
 
-    constructor({ user_id, email, password, is_admin, name }) {
+    constructor({ user_id, email, password, is_admin, name, token, tokenExpiry }) {
         this.id = user_id;
         this.email = email;
         this.password = password;
         this.isAdmin = is_admin;
-        this.name = name
+        this.name = name;
+        this.token = token;
+        this.tokenExpiry = tokenExpiry;
     }
 
     static async getOneById(id) {
@@ -55,6 +57,36 @@ class User {
         const newId = response.rows[0].user_id;
         const newUser = await User.getOneById(newId);
         return newUser;
+    }
+
+    async updateToken(data){
+        const { token, tokenExpiry, email} = data
+        const response = await db.query(`
+            UPDATE user_account
+            SET resettoken = $1, resettokenexpiry = $2
+            WHERE email = $3
+            RETURNING *`, 
+            [token],[tokenExpiry],[email])
+
+        if (response.rows.length === 0) {
+            throw new Error('No user found with this email')
+        }
+        return new User(response.rows[0])
+    }
+
+    async updateTokenPass(data){
+        const { token, tokenExpiry, password, email} = data
+        const response = await db.query(`
+            UPDATE user_account
+            SET resettoken = $1, resettokenexpiry = $2, password = $3
+            WHERE email = $4
+            RETURNING *`, 
+            [token],[tokenExpiry],[password],[email])
+
+        if (response.rows.length === 0) {
+            throw new Error('No user found with this email')
+        }
+        return new User(response.rows[0])
     }
 }
 

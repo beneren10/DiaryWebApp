@@ -1,7 +1,9 @@
 const User = require("../models/user");
-
+const crypto = require('crypto')
+const SendEmail = require('../sendEmail')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const path = require('path')
 
 
 async function register(req, res) {
@@ -54,7 +56,60 @@ async function login(req, res) {
     }
 }
 
+async function reset_request(req,res) {
+    const data = req.body
+    try {
+      const user = await User.getOneByUsername(data.email);
+      if(!user) { throw new Error('No user with this email') }
+
+      const token = crypto.randomBytes(32).toString('hex');
+
+      user.resetToken = token;
+      user.resetTokenExpiry = Date.now() + 3600000;
+      await user.save();
+
+      const resetUrl = `https://my-nodejs-appservice.azurewebsites.net/reset-verify?token=${token}`;
+
+      await SendEmail(user.email, 'Password Reset',`
+        Click link here to reset your password: ${resetUrl}
+        This link will expire in 1 hour.
+      `);
+      res.send('Password reset email sent')
+    } catch (err) {
+      res.status(401).json({ error: err.message })
+    }
+}
+
+async function reset_verify(req,res) {
+  const { token } = req.query
+  try {
+    const user = await User.getOneByToken(token)
+
+    if (!user) return res.status(400).send('Invalid or expired token')
+  
+    res.sendFile(path.join(__dirname, '..', 'client', 'pages', 'new-password.html'))
+    
+  } catch (err) {
+    res.status(401).json({ error: err.message})
+  }
+}
+
+async function reset_password(req,res) {
+  const { token, newPassword } = req.body
+  const user = await User.getOneByToken(token)
+
+  if (!user) return res.status(400).send(`Invalid token or expired token`)
+    
+  const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10);
+
+  user.password = await bcrypt.hash(newPassword, salt);
+  user.resetToken = undefined;
+  user.resetTokenExpiry = undefined;
+
+  await user.save();
+  res.send('Password has been reset succesfully')
+}
 
 module.exports = {
-    register, login
+    register, login, reset_request, reset_verify, reset_password
 }                           

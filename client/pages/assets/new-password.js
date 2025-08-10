@@ -1,3 +1,5 @@
+const { URLSearchParams } = require("url");
+
 (() => {
   "use strict";
 
@@ -28,10 +30,38 @@
       return;
     }
 
+    api_call_reset()
     
 
     alert("Password has been reset successfully!");
     form.reset();
     form.classList.remove("was-validated");
   });
+
+  async function api_call_reset() {
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get('token')
+
+    const options = {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: token,
+        newPassword: confirmPassword.value
+      })
+    }
+    const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/users/reset-password-reset`, options);
+    const data = await response.json();
+    if (response.status == 201) {
+      window.location.assign("login.html")
+    } else {
+      alert(data.error)
+    }
+  }
+
 })();
+

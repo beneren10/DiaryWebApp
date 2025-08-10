@@ -72,7 +72,7 @@ async function reset_request(req,res) {
       await User.updateToken(tokenData)
       
 
-      const resetUrl = `https://my-nodejs-appservice.azurewebsites.net/users/reset-verify?token=${token}`;
+      const resetUrl = `https://my-nodejs-appservice.azurewebsites.net/users/reset-password-verify?token=${token}`;
 
       await SendEmail(user.email, 'Password Reset',`
         Click link here to reset your password: ${resetUrl}

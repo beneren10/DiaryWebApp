@@ -66,7 +66,7 @@ async function reset_request(req,res) {
       
       const tokenData = {
         resetToken: token,
-        resetTokenExpiry: Date(Date.now() + 3600000),
+        resetTokenExpiry: new Date(Date.now() + 3600000),
         email: data.email
       }
       await User.updateToken(tokenData)
@@ -111,6 +111,7 @@ async function reset_password(req,res) {
     password: password,
     resetToken: undefined,
     resetTokenExpiry: undefined,
+    email: user.email
   }
 
   await User.updateTokenPass(tokenDataPass)

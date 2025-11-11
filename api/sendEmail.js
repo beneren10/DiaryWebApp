@@ -8,7 +8,7 @@ async function SendEmail(to, subject, text) {
     secure: false,          
     auth: {
       user: 'beneren10@gmail.com',
-      pass: process.env.EMAILPASS,
+      pass: 'txcfmlzbtaqicokj',
     },
   });
 

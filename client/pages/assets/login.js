@@ -16,7 +16,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             password: form.get("password")
         })
     }
-    const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/users/login`, options);
+    const response = await fetch(`http://localhost:3000/users/login`, options);
     const data = await response.json();
     if (response.status == 200) {
         localStorage.setItem("token", data.token);

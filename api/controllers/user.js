@@ -73,7 +73,7 @@ async function reset_request(req,res) {
       await User.updateToken(tokenData)
       
 
-      const resetUrl = `https://my-nodejs-appservice.azurewebsites.net/users/reset-password-verify?token=${token}`;
+      const resetUrl = `http://localhost:3000/users/reset-password-verify?token=${token}`;
 
       await SendEmail(user.email, 'Password Reset',`
         Click link here to reset your password: ${resetUrl}
@@ -89,10 +89,9 @@ async function reset_verify(req,res) {
   const { token } = req.query
   try {
     const user = await User.getOneByToken(token)
-
     if (!user) return res.status(400).send('Invalid or expired token')
-  
-    res.sendFile(path.join(__dirname, '..', 'client', 'pages', 'new-password.html'))
+    console.log(__dirname);
+    res.sendFile(path.join(__dirname, '..', '..', 'client', 'pages', 'new-password.html'))
     
   } catch (err) {
     res.status(401).json({ error: err.message})
@@ -101,6 +100,8 @@ async function reset_verify(req,res) {
 
 async function reset_password(req,res) {
   const { token, newPassword } = req.body
+  console.log(token);
+  console.log(newPassword);
   const user = await User.getOneByToken(token)
 
   if (!user) return res.status(400).send(`Invalid token or expired token`)
@@ -117,6 +118,7 @@ async function reset_password(req,res) {
 
   await User.updateTokenPass(tokenDataPass)
   res.send('Password has been reset succesfully')
+  window.location.href = 'login.html'
 }
 
 module.exports = {

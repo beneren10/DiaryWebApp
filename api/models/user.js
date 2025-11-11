@@ -60,13 +60,15 @@ class User {
     }
 
     static async updateToken(data){
-        const { resettoken, resettokenExpiry, email} = data
+        console.log('inside');
+        console.log(data);
+        const { resetToken, resetTokenExpiry, email} = data
         const response = await db.query(`
             UPDATE user_account
             SET resettoken = $1, resettokenexpiry = $2
             WHERE email = $3
             RETURNING *`, 
-            [resettoken,resettokenExpiry,email])
+            [resetToken,resetTokenExpiry,email])
 
         if (response.rows.length === 0) {
             throw new Error('No user found with this email')
@@ -75,13 +77,14 @@ class User {
     }
 
     static async updateTokenPass(data){
-        const { token, tokenExpiry, password, email} = data
+        const { resetToken, resetTokenExpiry, password, email} = data
+        console.log(data);
         const response = await db.query(`
             UPDATE user_account
             SET resettoken = $1, resettokenexpiry = $2, password = $3
             WHERE email = $4
             RETURNING *`, 
-            [token,tokenExpiry,password,email])
+            [resetToken,resetTokenExpiry,password,email])
 
         if (response.rows.length === 0) {
             throw new Error('No user found with this email')

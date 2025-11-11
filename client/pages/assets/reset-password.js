@@ -74,7 +74,7 @@ async function sendEmail() {
     }),
   };
   const response = await fetch(
-    `https://my-nodejs-appservice.azurewebsites.net/users/reset-password-request`,
+    `http://localhost:3000/users/reset-password-request`,
     options
   );
   const data = await response.json();

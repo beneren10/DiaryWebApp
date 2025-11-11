@@ -52,7 +52,7 @@ function newItem(e){
 
 async function postCard(data) {
     try {
-        const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/diary/`, {
+        const response = await fetch(`http://localhost:3000/diary/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ async function postCard(data) {
 
 async function getNewCard(data) {
     try {
-        const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/diary/${data}`)
+        const response = await fetch(`http://localhost:3000/diary/${data}`)
         if (response.ok) {
             const data = await response.json()
             entry(data)
@@ -126,7 +126,7 @@ function deleteItem(e){
 
 async function deleteDiaryEntry(id,e) {
     try {
-        const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/diary/${id}`, {
+        const response = await fetch(`http://localhost:3000/diary/${id}`, {
             method: 'DELETE'
         });
 
@@ -148,7 +148,7 @@ async function fetchDiary() {
         }
     }
     try {
-        const response = await fetch(`https://my-nodejs-appservice.azurewebsites.net/diary`, options)
+        const response = await fetch(`http://localhost:3000/diary`, options)
         if (response.ok) {
             const data = await response.json()
             entry(data)
@@ -227,7 +227,7 @@ document.getElementById('editForm').addEventListener('submit', async function(e)
     const id = document.getElementById('editId').value;
     
     try {
-        const res = await fetch(`https://my-nodejs-appservice.azurewebsites.net/diary/${id}`, {
+        const res = await fetch(`http://localhost:3000/diary/${id}`, {
             method: 'PATCH', // or 'PATCH'
             headers: {
                 'Content-Type': 'application/json'

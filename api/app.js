@@ -1,11 +1,10 @@
 const express = require('express');
+const path = require('path');
 const cors = require("cors")
 
 const logRouters = require('./middleware/logger')
-
 const diaryRouter = require('./routers/diary');
 const userRouter = require('./routers/user')
-
 
 const app = express()
 
@@ -16,12 +15,19 @@ app.use(logRouters)
 app.use("/diary", diaryRouter)
 app.use("/users", userRouter);
 
+app.get('/health', (req, res) => res.send('OK'));
+app.get('/port', (req,res) => res.send(process.env.PORT))
+app.get('/route', (req,res) => res.send(__dirname))
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    title: "Bridget Jones's Diary!",
-    description: "Do you love the sound of your own voice? Do you feel that you have something to share that you don't want anyone else to see?"
-  })
-})
+
+
+// Serve all HTML files in /client/pages as static files
+app.use(express.static(path.join(__dirname, '..', 'client', 'pages')));
+
+// On root, send index.html or register.html as you prefer
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'pages', 'register.html'));
+});
 
 module.exports = app;
+

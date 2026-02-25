@@ -2,16 +2,22 @@ const db = require('../database/connect');
 
 class User {
 
-    constructor({ user_id, email, password, is_admin, name }) {
+    constructor({ user_id, email, password, is_admin, name, token, tokenExpiry }) {
         this.id = user_id;
         this.email = email;
         this.password = password;
         this.isAdmin = is_admin;
-        this.name = name
+        this.name = name;
+        this.token = token;
+        this.tokenExpiry = tokenExpiry;
     }
 
     static async getOneById(id) {
-        const response = await db.query("SELECT * FROM user_account WHERE user_id = $1", [id]);
+        const response = await db.query(`
+            SELECT * FROM user_account 
+            WHERE user_id = $1`, 
+            [id]);
+
         if (response.rows.length != 1) {
             throw new Error("Unable to locate user.");
         }
@@ -19,11 +25,29 @@ class User {
     }
 
     static async getOneByUsername(email) {
-        const response = await db.query("SELECT * FROM user_account WHERE email = $1", [email]);
+        const response = await db.query(`
+            SELECT * FROM user_account 
+            WHERE email = $1`, 
+            [email]);
+
         if (response.rows.length != 1) {
             throw new Error("Unable to locate user.");
         }
         return new User(response.rows[0]);
+    }
+
+    static async getOneByToken(param) {
+        const response = await db.query(`
+            SELECT * FROM user_account 
+            WHERE resettoken = $1 
+            AND resettokenexpiry > NOW() 
+            LIMIT 1`,
+            [param])
+        
+        if (response.rows.length != 1){
+            throw new Error('Unable to locate token user')
+        }
+        return new User(response.rows[0])
     }
 
     static async create(data) {
@@ -33,6 +57,39 @@ class User {
         const newId = response.rows[0].user_id;
         const newUser = await User.getOneById(newId);
         return newUser;
+    }
+
+    static async updateToken(data){
+        console.log('inside');
+        console.log(data);
+        const { resetToken, resetTokenExpiry, email} = data
+        const response = await db.query(`
+            UPDATE user_account
+            SET resettoken = $1, resettokenexpiry = $2
+            WHERE email = $3
+            RETURNING *`, 
+            [resetToken,resetTokenExpiry,email])
+
+        if (response.rows.length === 0) {
+            throw new Error('No user found with this email')
+        }
+        return new User(response.rows[0])
+    }
+
+    static async updateTokenPass(data){
+        const { resetToken, resetTokenExpiry, password, email} = data
+        console.log(data);
+        const response = await db.query(`
+            UPDATE user_account
+            SET resettoken = $1, resettokenexpiry = $2, password = $3
+            WHERE email = $4
+            RETURNING *`, 
+            [resetToken,resetTokenExpiry,password,email])
+
+        if (response.rows.length === 0) {
+            throw new Error('No user found with this email')
+        }
+        return new User(response.rows[0])
     }
 }
 

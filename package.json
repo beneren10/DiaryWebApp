@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
-    "setup-db": "node ./database/setup.js",
-    "start": "node index.js"
+    "setup-db": "node ./api/database/setup.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +16,11 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.5",
     "pg": "^8.13.1",
     "uuid": "^11.1.0"
   },

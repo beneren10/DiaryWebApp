@@ -42,7 +42,6 @@ async function create(req, res) {
     // I have to pass in the token Payload, which includes user ID to assign the value in the database against the user
 
     const token = req.headers.authorization;
-    console.log(token);
     
     if (!token) throw new Error("Token missing");
     const decoded = parseJwt(token);
@@ -60,7 +59,6 @@ async function update(req, res) {
     const id = parseInt(req.params.id);
     const data = req.body;
     const diary = await Diary.getOneById(id);
-    console.log(diary);
     const result = await diary.update(data);
 
     res.status(200).json(result);

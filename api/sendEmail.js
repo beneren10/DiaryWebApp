@@ -7,15 +7,15 @@ async function SendEmail(to, subject, text) {
     port: 587,
     secure: false,          
     auth: {
-      user: 'beneren10@gmail.com',
-      pass: 'txcfmlzbtaqicokj',
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
 
   // Send mail
   await transporter.sendMail({
-    from: '"Diary a Day" <beneren10@gmail.com>',
+    from: `"Diary a Day" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     text,
